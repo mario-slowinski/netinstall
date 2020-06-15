@@ -1,0 +1,49 @@
+---
+- name: "Create PXE configuration files"
+  hosts: yum.prs.local
+  vars:
+  - pxe_menu: pxe-menu.ji2
+  - pxe_kickstart: pxe-kickstart.ji2
+  tasks:
+  - name: "Create PXE configuration for each OS version"
+    tags: config
+    blockinfile:
+      path: "{{ pxe_dir }}/pxelinux.cfg/{{ item[0]['name'] }}-{{ item[1]['version'] }}"
+      owner: root
+      group: root
+      mode: 0644
+      create: yes
+      marker: "# {mark} {{ item[0]['description'] }} {{ item[1]['version'] }}"
+      setype: tftpdir_t
+      block: |
+        default {{ item[0]['name'] }}-{{ item[1]['version'] }}
+        label {{ item[0]['name'] }}-{{ item[1]['version'] }}
+        {% if item[0]['name'] == 'solaris' %}
+          kernel mboot.c32
+          append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media=http://{{ inventory_hostname }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555 --- solaris/platform/i86pc/amd64/boot_archive
+        {% else %}
+          kernel {{ item[0]['name'] }}/{{ item[1]['version'] }}/isolinux/vmlinuz
+          append initrd={{ item[0]['name'] }}/{{ item[1]['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ item[1]['repo_url'] }} ks=http://{{ inventory_hostname }}/{{ item[0]['name'] }}/kickstart-{{ item[1]['version'] }}
+        {% endif %}
+    loop: "{{ os | subelements('release') }}"
+  - name: "Create PXE menu files for each distribution"
+    tags: menu
+    template:
+      src: "{{ pxe_menu }}"
+      dest: "{{ pxe_dir }}/pxelinux.cfg/{{ item['name'] }}"
+      owner: root
+      group: root
+      mode: 0644
+      setype: tftpdir_t
+    # add { name: default } to create main menu file
+    loop: "{{ os + [{'name':'default'}] }}"
+  - name: "Create kickstart file for each distribution major release"
+    tags: kickstart
+    template:
+      src: "{{ pxe_kickstart }}"
+      dest: "{{ http['dir'] }}/{{ item[0]['name'] }}/kickstart-{{ item[1]['version'] }}"
+      owner: root
+      group: root
+      mode: 0644
+      setype: tftpdir_t
+    loop: "{{ os | subelements('release') }}"

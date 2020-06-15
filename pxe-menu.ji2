@@ -1,0 +1,73 @@
+{% if item['name'] == 'default' %}
+default vesamenu.c32
+
+menu clear
+menu background splash.png
+menu title PRS PXE installer
+menu vshift 8
+menu rows 18
+menu margin 8
+#menu hidden
+menu helpmsgrow 15
+menu tabmsgrow 13
+
+include pxelinux.cfg/rhel Red Hat Enterprise Linux
+include pxelinux.cfg/ol Oracle Linux
+include pxelinux.cfg/centos CentOS
+include pxelinux.cfg/solaris Oracle Solaris 11
+
+menu separator
+label local
+	menu label Boot from local drive
+	menu default
+	localboot 0xffff
+{% elif item['name'] == 'solaris' %}
+label {{ item['name'] }}-install
+        menu label {{ item['description'] }} install
+        text help
+                login: root password: Welcome2
+                For VMware E1000 interface type required
+        endtext
+        kernel mboot.c32
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media={{ item['release'][0]['repo_url'] }} --- solaris/platform/i86pc/amd64/boot_archive
+label {{ item['name'] }}-rescue
+        menu label {{ item['description'] }} rescue
+        text help
+                For VMware E1000 interface type required
+        endtext
+        kernel mboot.c32
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -m verbose -B install_media={{ item['release'][0]['repo_url'] }} --- solaris/platform/i86pc/amd64/boot_archive
+menu separator
+label back
+        menu Back
+        menu exit
+{% else %}
+{% for release in item['release'] %}
+	menu begin {{ release['version'] }}
+	menu title {{ item['description'] }} {{ release['version'] }}
+	label {{ item['name'] }}-install
+		menu label {{ item['description'] }} installer
+		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }}
+	label {{ item['name'] }}-kickstart
+		menu label {{ item['description'] }} kickstart
+		text help
+			login: root password: Welcome2
+		endtext
+		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+	label {{ item['name'] }}-rescue
+		menu label {{ item['description'] }} rescue
+		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }} rescue
+	menu separator
+	label back
+		menu Back
+	menu exit
+	menu end
+{% endfor %}
+menu separator
+label back
+	menu Back
+menu exit
+{% endif %}

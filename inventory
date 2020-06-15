@@ -1,0 +1,7 @@
+localhost
+
+[netinstall:vars]
+description="Network install service host"
+
+[netinstall]
+yum.prs.local

@@ -1,0 +1,59 @@
+---
+- name: "Download, verify, mount install images for '{{ distro }}'"
+  hosts: netinstall
+  tasks:
+  - name: "Create directory for '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}'"
+    tags: directory
+    file:
+      path: "{{ item[0]['img_dir'] }}/{{ item[0]['name'] }}/{{ item[1]['version'] | string }}/isolinux"
+      owner: root
+      group: "{{ http['user'] }}"
+      mode: 0755
+      setype: httpd_sys_content_t
+      state: directory
+    loop: "{{ os | selectattr('name','eq',distro) | list | subelements('release') }}"
+    # only for centos create pxe directories, for other image iso will be mounted
+    when: item[0]['name'] == 'centos'
+  - name: "Download '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' image"
+    tags: download
+    get_url:
+      url: "{{ item[1][1]['url'] }}"
+      # for centos download kernel images into pxe directory
+      # for ol download boot iso
+      # for rhel just verify iso image checksum by pretending to download it into common soft directory
+      dest: "{{ (item[0]['name'] == 'centos') | ternary(item[0]['img_dir'] +'/'+ item[0]['name'] +'/'+ item[1][0]['version'] | string +'/isolinux/'+ item[1][1]['name'], item[0]['img_dir'] +'/'+ item[1][1]['name']) }}"
+      checksum: "{{ item[1][1]['sum'] }}"
+      owner: root
+      group: "{{ http['user'] }}"
+      mode: 0644
+      setype: httpd_sys_content_t
+    loop: "{{ os | selectattr('name','eq',distro) | list | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('image','defined') | list | subelements('image')) | list }}"
+    when: item[0]['name'] != 'solaris'
+  - name: "Mount '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' repo"
+    tags: mount
+    mount:
+      src: "{{ item[0]['img_dir'] +'/'+ item[1][1]['name'] }}"
+      path: "{{ item[0]['repo_dir'] +'/'+ item[1][0]['version'] | string }}"
+      fstype: hsfs
+      opts: "ro,nosuid,noglobal,maplcase,rr,traildot"
+      state: mounted
+    loop: "{{ os | selectattr('name','eq',distro) | list | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('image','defined') | list | subelements('image')) | list }}"
+    when: item[0]['name'] == 'rhel' or item[0]['name'] == 'ol'
+  - name: "Mount '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' pxe"
+    tags: mount
+    mount:
+      src: "{{ item[0]['repo_dir'] +'/'+ item[1][0]['version'] | string }}"
+      path: "{{ pxe_dir +'/'+ item[0]['name'] + '/'+ item[1][0]['version'] | string }}"
+      fstype: lofs
+      opts: "ro"
+      state: mounted
+    loop: "{{ os | selectattr('name','eq',distro) | list | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('image','defined') | list | subelements('image')) | list }}"
+    when: item[0]['name'] == 'rhel' or item[0]['name'] == 'ol'
+  - name: "Image for '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}'"
+    tags: debug
+    debug:
+      msg: 
+      - "Download:   {{ item[1][1]['url'] }} -> {{ (item[0]['name'] == 'centos') | ternary(item[0]['img_dir'] +'/'+ item[0]['name'] +'/'+ item[1][0]['version'] | string +'/'+ item[1][1]['name'], item[0]['img_dir'] +'/'+ item[1][1]['name']) }}"
+      - "Mount repo: {{ (item[0]['repo_dir'] == '') | ternary('nothing to mount, internet repo', item[0]['img_dir'] +'/'+ item[1][1]['name'] +' -> '+ item[0]['repo_dir'] +'/'+ item[1][0]['version'] | string) }}"
+      - "Mount pxe:  {{ (item[0]['repo_dir'] == '') | ternary('nothing to mount, pxe images downloaded', item[0]['repo_dir'] +'/'+ item[1][0]['version'] | string +' -> '+ pxe_dir +'/'+ item[0]['name'] + '/'+ item[1][0]['version'] | string) }}"
+    loop: "{{ os | selectattr('name','eq',distro) | list | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('image','defined') | list | subelements('image')) | list }}"
