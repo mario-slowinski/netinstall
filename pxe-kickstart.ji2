@@ -1,6 +1,6 @@
 {% set os = item[0] %}
 {% set release = item[1] %}
-{% set version = release['version'] | int %}
+{% set version = release['version'] | regex_replace('^([0-9]+)\\..*', '\\1')  %}
 #version={{ os['name'] }}-{{ release['version'] }}
 # System authorization information
 auth --enableshadow --passalgo=sha512
@@ -8,7 +8,7 @@ auth --enableshadow --passalgo=sha512
 cmdline
 eula --agreed
 install 
-url --url={{ release['repo_url'] }}
+url --url="{{ release['pkg_repo'] | default(release['pxe_repo']) }}"
 
 # Run the Setup Agent on first boot
 firstboot --enable
@@ -20,8 +20,9 @@ lang en_US
 
 # Network information
 #network  --bootproto=static --device=eno16777984 --gateway=172.31.128.1 --ip=172.31.130.90 --nameserver=172.31.128.10,172.31.128.1 --netmask=255.255.252.0 --ipv6=auto --activate
-network  --bootproto=dhcp --device=link --ipv6=ignore --activate
+network  --bootproto=dhcp --device=link --ipv6=ignore --hostname={{ os['name'] }}-{{ version }} --activate
 firewall --enabled --ssh
+selinux --enforcing
 
 # Root password
 rootpw --iscrypted $6$eO8qpM9rbw7XB4F1$4a9etAPLLmX4MPi9GVd0eHhZtfrx3cZvYZ3/vkSIuHjEJPXvB1UX/HfQZ3vVloMLGYfqbCr7pD1lg9wwyn3xE1
@@ -41,16 +42,30 @@ logvol swap --vgname={{ os['name'] }} --size=1000 --name=swap --fstype=swap --la
 
 reboot
 
+{% if os['name'] == 'rhel' %}
+{% if version == '7' %}
+repo --name=prs --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
+{% elif version == '8' %}
+repo --name="prs-BaseOS" --baseurl={{ release['pkg_repo']| default(release['pxe_repo']) }} --install
+repo --name="prs-AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('BaseOS','AppStream') | regex_replace('baseos','appstream') }} --install
+{% endif %}
+{% elif os['name'] == 'ol' %}
+{% if version == '7' %}
+repo --name=prs --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
+{% elif version == '8' %}
+repo --name="BaseOS" --baseurl={{ release['pkg_repo']| default(release['pxe_repo']) }} --install
+repo --name="AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('latest/','') | regex_replace('baseos','appstream') }} --install
+{% endif %}
+{% endif %}
+
 %packages
-{% if version == 7 %}
+{% if version == '7' %}
 @^minimal
-@core
 python
 screen
-{% endif %}
-{% if version == 8 %}
+{% elif version == '8' %}
 @^minimal-environment
-python3
+python3-pip
 tmux
 {% endif %}
 kexec-tools
@@ -61,11 +76,20 @@ sssd-krb5
 sssd-ldap
 %end
 
+%addon com_redhat_kdump --enable --reserve-mb="auto"
+%end
+
 %post
-{% if version == 7 %}
+{% if version == "7" %}
 ln -sf /usr/bin/python2 /usr/bin/python
-{% endif %}
-{% if version == 8 %}
+{% elif version == "8" %}
 ln -sf /usr/bin/python3 /usr/bin/python
 {% endif %}
+cat << EOF > /etc/profile.d/colorprompt.sh
+if [ `id | cut -c 5` -eq 0 ]; then
+	typeset +x PS1='\[\033[01;31m\]\h\[\033[01;34m\] \W #\[\033[00m\] '
+else
+	typeset +x PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+fi
+EOF
 %end

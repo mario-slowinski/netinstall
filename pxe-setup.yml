@@ -1,6 +1,6 @@
 ---
 - name: "Create PXE configuration files"
-  hosts: yum.prs.local
+  hosts: netinstall
   vars:
   - pxe_menu: pxe-menu.ji2
   - pxe_kickstart: pxe-kickstart.ji2
@@ -23,7 +23,7 @@
           append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media=http://{{ inventory_hostname }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555 --- solaris/platform/i86pc/amd64/boot_archive
         {% else %}
           kernel {{ item[0]['name'] }}/{{ item[1]['version'] }}/isolinux/vmlinuz
-          append initrd={{ item[0]['name'] }}/{{ item[1]['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ item[1]['repo_url'] }} ks=http://{{ inventory_hostname }}/{{ item[0]['name'] }}/kickstart-{{ item[1]['version'] }}
+          append initrd={{ item[0]['name'] }}/{{ item[1]['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ item[1]['pxe_repo'] }} inst.repo={{ item[1]['pkg_repo'] | default(item[1]['pxe_repo']) }} ks=http://{{ inventory_hostname }}/{{ item[0]['name'] }}/kickstart-{{ item[1]['version'] }}
         {% endif %}
     loop: "{{ os | subelements('release') }}"
   - name: "Create PXE menu files for each distribution"

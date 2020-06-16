@@ -1,3 +1,4 @@
+---
 pxe_dir: "/etc/netboot/pxelinux"
 http:
   user: webservd
@@ -9,43 +10,34 @@ ntp_server:
 os:
 - name: centos
   description: "CentOS"
-  img_dir: "/etc/netboot/pxelinux"
-  repo_dir: ""
+  img_dir: "/export/soft/rhel"
+  repo_dir: "/export/repo/centos"
   release:
-  - version: 8.1
-    repo_url: "http://mirror.centos.org/centos/8/BaseOS/x86_64/os"
+  - version: "8"
+    pxe_repo: "http://mirror.centos.org/centos/8/BaseOS/x86_64/os"
     image:
-    - { name: "vmlinuz", url: "http://mirror.centos.org/centos/8/BaseOS/x86_64/kickstart/images/pxeboot/vmlinuz", sum: "sha256:91e58e93a9bf4d05c7b189dca10e791f414a114154714f9b0ee8630aa8776653"}
-    - { name: "initrd.img", url: "http://mirror.centos.org/centos/8/BaseOS/x86_64/kickstart/images/pxeboot/initrd.img", sum: "sha256:2813def028c5bb62a08c45027dc055d0c082b5232ffe026046b56ce0f2941d35"}
-  - version: 8.0
-    repo_url: "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os"
+    - { name: "CentOS-8.2.2004-x86_64-boot.iso", url: "http://ftp.icm.edu.pl/pub/Linux/distributions/centos/8/isos/x86_64/CentOS-8.2.2004-x86_64-boot.iso", sum: "sha256:c67876a5602faa17f68b40ccf2628799b87454aa67700f0f57eec15c6ccdd98c"}
+  - version: "7"
+    pxe_repo: "http://mirror.centos.org/centos/7/os/x86_64"
     image:
-    - { name: "vmlinuz", url: "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz", sum: "sha256:f501c9cf0051acb52ce44098a71f0b3c6a39ea4fe7ff2ea79ae2ef357dbb6bdb"}
-    - { name: "initrd.img", url: "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img", sum: "sha256:97c808f9d634fea9ea1bc88f425eef9747b4011ef2486840c5ffc20b5ed035a8"}
-  - version: 7.8
-    repo_url: "http://mirror.centos.org/centos/7.8.2003/os/x86_64"
-    image:
-    - { name: "vmlinuz", url: "http://mirror.centos.org/centos/7.8.2003/os/x86_64/images/pxeboot/vmlinuz", sum: "sha256:5561196e7128dbc3b08bd1c0d79d41f2e7ff748006204d68c257b0e06e198761"}
-    - { name: "initrd.img", url: "http://mirror.centos.org/centos/7.8.2003/os/x86_64/images/pxeboot/initrd.img", sum: "sha256:8f35a17857179742ffd743e326ed68dc470d2b6faccb14dbd5957545f1a727a6"}
+    - { name: "CentOS-7-x86_64-NetInstall-2003.iso", url: "http://ftp.icm.edu.pl/pub/Linux/distributions/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-2003.iso", sum: "sha256:101bc813d2af9ccf534d112cbe8670e6d900425b297d1a4d2529c5ad5f226372"}
 - name: rhel
   description: "Red Hat Enterprise Linux Server"
   img_dir: "/export/soft/rhel"
   repo_dir: "/export/repo/rhel"
   release:
-  - version: 8.2
-    repo_url: "http://yum.prs.local/rhel/8.2"
+  - version: "8.2"
+    pxe_repo: "http://{{ inventory_hostname }}/rhel/8.2"
+    pkg_repo: "http://{{ inventory_hostname }}/rhel/8.2/BaseOS"
     image:
     - { name: "rhel-8.2-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-8.2-x86_64-dvd.iso", sum: "sha256:7fdfed9c7cced4e526a362e64ed06bcdc6ce0394a98625a40e7d05db29bf7b86" }
-  - version: 8.1
-    repo_url: "http://yum.prs.local/rhel/8.1"
-    image:
-    - { name: "rhel-8.1-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-8.1-x86_64-dvd.iso", sum: "sha256:2323ad44d75df1a1e83048a34e196ddfedcd6c0f6c49ea59bf08095e3bb9ef65" }
-  - version: 8.0
-    repo_url: "http://yum.prs.local/rhel/8.0"
+  - version: "8.0"
+    pxe_repo: "http://{{ inventory_hostname }}/rhel/8.0"
+    pkg_repo: "http://{{ inventory_hostname }}/rhel/8.0/BaseOS"
     image:
     - { name: "rhel-8.0-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-8.0-x86_64-dvd.iso", sum: "sha256:005d4f88fff6d63b0fc01a10822380ef52570edd8834321de7be63002cc6cc43" }
-  - version: 7.8
-    repo_url: "http://yum.prs.local/rhel/7.8"
+  - version: "7.8"
+    pxe_repo: "http://{{ inventory_hostname }}/rhel/7.8"
     image:
     - { name: "rhel-server-7.8-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-server-7.8-x86_64-dvd.iso", sum: "sha256:3ca2017f12392fc8acad435c05a941bb88620ece8eb5740278ffa61d8340792d" }
 - name: ol
@@ -53,36 +45,23 @@ os:
   img_dir: "/export/soft/oracle/linux"
   repo_dir: "/export/repo/ol"
   release:
-  - version: 8.2
-    repo_url: "http://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64"
+  - version: "8.latest"
+    pxe_repo: "http://{{ inventory_hostname }}/ol/8.latest"
+    pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64"
     image:
-    - { name: "OracleLinux-R8-U2-x86_64-boot.iso",
-        url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u2/x86_64/x86_64-boot.iso",
-        sum: "sha256:a7d0db29491f886e60f213ad6a297f70b180a1b8720999f8ed861ab4d56df5e8"
-      }
-  - version: 8.1
-    repo_url: "http://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64"
+    - { name: "OracleLinux-R8-U2-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u2/x86_64/x86_64-boot.iso", sum: "sha256:a7d0db29491f886e60f213ad6a297f70b180a1b8720999f8ed861ab4d56df5e8" }
+  - version: "8.0"
+    pxe_repo: "http://{{ inventory_hostname }}/ol/8.0"
+    pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL8/0/baseos/x86_64"
     image:
-    - { name: "OracleLinux-R8-U1-x86_64-boot.iso",
-        url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u1/x86_64/x86_64-boot.iso",
-        sum: "sha256:5302d4724721aa78e2dc5f96b254ff05eef8dbaccd0e0c44aabeb11251ef25fd"
-      }
-  - version: 8.0
-    repo_url: "http://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64"
+    - { name: "OracleLinux-R8-U0-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u0/x86_64/x86_64-boot.iso", sum: "sha256:aa90f678f7791bef79bfd9ad5b219de40949cdf77e2050131627d2c3270e63c1" }
+  - version: "7.8"
+    pxe_repo: "http://{{ inventory_hostname }}/ol/7.8"
+    pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64"
     image:
-    - { name: "OracleLinux-R8-U0-x86_64-boot.iso",
-        url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u0/x86_64/x86_64-boot.iso",
-        sum: "sha256:aa90f678f7791bef79bfd9ad5b219de40949cdf77e2050131627d2c3270e63c1"
-      }
-  - version: 7.8
-    repo_url: "http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64"
-    image:
-    - { name: "OracleLinux-R7-U8-x86_64-boot.iso",
-        url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u8/x86_64/x86_64-boot.iso",
-        sum: "sha256:28c333bab276251f4a0d13438cdd2386e5e83c5dd65f3444f785dd698a34f46f"
-      }
+    - { name: "OracleLinux-R7-U8-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u8/x86_64/x86_64-boot.iso", sum: "sha256:28c333bab276251f4a0d13438cdd2386e5e83c5dd65f3444f785dd698a34f46f" }
 - name: solaris
   description: Oracle Solaris
   release:
-  - version: 11
-    repo_url: "http://{{ inventory_hostname }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555"
+  - version: "11"
+    pxe_repo: "http://{{ inventory_hostname }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555"

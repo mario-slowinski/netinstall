@@ -29,14 +29,14 @@ label {{ item['name'] }}-install
                 For VMware E1000 interface type required
         endtext
         kernel mboot.c32
-        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media={{ item['release'][0]['repo_url'] }} --- solaris/platform/i86pc/amd64/boot_archive
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media={{ item['release'][0]['pxe_repo'] }} --- solaris/platform/i86pc/amd64/boot_archive
 label {{ item['name'] }}-rescue
         menu label {{ item['description'] }} rescue
         text help
                 For VMware E1000 interface type required
         endtext
         kernel mboot.c32
-        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -m verbose -B install_media={{ item['release'][0]['repo_url'] }} --- solaris/platform/i86pc/amd64/boot_archive
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -m verbose -B install_media={{ item['release'][0]['pxe_repo'] }} --- solaris/platform/i86pc/amd64/boot_archive
 menu separator
 label back
         menu Back
@@ -48,18 +48,18 @@ label back
 	label {{ item['name'] }}-install
 		menu label {{ item['description'] }} installer
 		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }}
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }}
 	label {{ item['name'] }}-kickstart
 		menu label {{ item['description'] }} kickstart
 		text help
 			login: root password: Welcome2
 		endtext
 		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
 	label {{ item['name'] }}-rescue
 		menu label {{ item['description'] }} rescue
 		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.repo={{ release['repo_url'] }} rescue
+		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} rescue
 	menu separator
 	label back
 		menu Back
