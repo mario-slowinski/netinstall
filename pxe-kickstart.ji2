@@ -53,8 +53,7 @@ repo --name="prs-AppStream" --baseurl={{ release['pkg_repo'] | default(release['
 {% if version == '7' %}
 repo --name=prs --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
 {% elif version == '8' %}
-repo --name="BaseOS" --baseurl={{ release['pkg_repo']| default(release['pxe_repo']) }} --install
-repo --name="AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('latest/','') | regex_replace('baseos','appstream') }} --install
+repo --name="AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('latest/','') | regex_replace('baseos','appstream') }}
 {% endif %}
 {% endif %}
 
@@ -83,6 +82,9 @@ sssd-ldap
 {% if version == "7" %}
 ln -sf /usr/bin/python2 /usr/bin/python
 {% elif version == "8" %}
+{% if os['name'] == 'rhel' %}
+sed -i 's#enabled=1#enabled=1\ngpgkey=http://{{ inventory_hostname }}/{{ os["name"] }}/{{ release["version"] }}/RPM-GPG-KEY-redhat-release#g' /etc/yum.repos.d/prs*
+{% endif %}
 ln -sf /usr/bin/python3 /usr/bin/python
 {% endif %}
 cat << EOF > /etc/profile.d/colorprompt.sh
