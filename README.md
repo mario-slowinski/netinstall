@@ -35,7 +35,7 @@ Most settings (if not all) in variable files:
 
 Adjust **variables** accordingly.
 For RHEL download full DVD ISO image and put it in *img_dir*.
-For CentOS and Oracle Linux boot ISO image will be downloaded from the internet.
+For other distributions boot ISO image will be downloaded from the internet.
 This can be chaned by *image > url* variable.
 
 ### Playbooks should be run in the following order
@@ -48,6 +48,8 @@ This can be chaned by *image > url* variable.
    * centos
    * rhel
    * ol
+   * opensuse
+   * debian
 
    ```bash
    ansible-playbook image-setup.yml
@@ -63,5 +65,3 @@ This can be chaned by *image > url* variable.
 1. Optionally remove existing in filesystem but missing in vars file OS relase configs, dirs, mountpoints.
 
    ```bash
-   ansible-playbook cleanup.yml
-   ```

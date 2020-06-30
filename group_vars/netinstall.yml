@@ -70,6 +70,16 @@ os:
     pkg_repo: "https://packages.debian.org/buster/repo"
     image:
     - { name: "debian-10.4.0-amd64-netinst.iso", url: "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.4.0-amd64-netinst.iso", sum: "sha256:ab3763d553330e90869487a6843c88f1d4aa199333ff16b653e60e59ac1fc60b" }
+- name: opensuse
+  description: openSUSE
+  img_dir: "/export/soft/opensuse"
+  repo_dir: "/export/repo/opensuse"
+  release:
+  - version: "15.1"
+    pxe_repo: "http://{{ inventory_hostname }}/opensuse/15.1"
+    pkg_repo: "http://download.opensuse.org/distribution/leap/15.1/repo/oss/"
+    image:
+    - { name: "openSUSE-Leap-15.1-NET-x86_64.iso", url: "https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso", sum: "sha256:609d0ad527ab13681b44e28326cd7941e87adfe8d522e2b31d0d7c71e9d92992" }
 - name: solaris
   description: Oracle Solaris
   release:
