@@ -14,6 +14,7 @@ menu tabmsgrow 13
 include pxelinux.cfg/rhel Red Hat Enterprise Linux
 include pxelinux.cfg/ol Oracle Linux
 include pxelinux.cfg/centos CentOS
+include pxelinux.cfg/debian Debian
 include pxelinux.cfg/solaris Oracle Solaris 11
 
 menu separator
@@ -43,25 +44,32 @@ label back
         menu Back
         menu exit
 {% else %}
+{% if item['name'] == 'debian' %}
+{% set vmlinuz = 'install.amd/vmlinuz' %}
+{% set initrd = 'install.amd/initrd.gz' %}
+{% else %}
+{% set vmlinuz = 'isolinux/vmlinuz' %}
+{% set initrd = 'isolinux/initrd.img' %}
+{% endif %}
 menu title {{ item['description'] }}
 {% for release in item['release'] %}
 	menu begin {{ release['version'] }}
 	menu title {{ item['description'] }} {{ release['version'] }}
 	label {{ item['name'] }}-install
 		menu label {{ item['description'] }} installer
-		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }}
+		kernel {{ item['name'] }}/{{ release['version'] }}/{{ vmlinuz }}
+		append initrd={{ item['name'] }}/{{ release['version'] }}/{{ initrd }} ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }}
 	label {{ item['name'] }}-kickstart
 		menu label {{ item['description'] }} kickstart
 		text help
 			login: root    password: Welcome2
 		endtext
-		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+		kernel {{ item['name'] }}/{{ release['version'] }}/{{ vmlinuz }}
+		append initrd={{ item['name'] }}/{{ release['version'] }}/{{ initrd }} ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
 	label {{ item['name'] }}-rescue
 		menu label {{ item['description'] }} rescue
-		kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-		append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} rescue
+		kernel {{ item['name'] }}/{{ release['version'] }}/{{ vmlinuz }}
+		append initrd={{ item['name'] }}/{{ release['version'] }}/{{ initrd }} ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} rescue
 	menu separator
 	label back
 		menu Back
