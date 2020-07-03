@@ -1,0 +1,59 @@
+{% set os = item[0] %}
+{% set release = item[1] %}
+{% set version = release['version'] | regex_replace('^([0-9]+)\\..*', '\\1')  %}
+d-i debian-installer/locale string en_US
+d-i debian-installer/language string en
+d-i debian-installer/country string PL
+d-i keyboard-configuration/xkb-keymap select us
+d-i passwd/make-user boolean false
+d-i passwd/root-password-crypted password $6$eO8qpM9rbw7XB4F1$4a9etAPLLmX4MPi9GVd0eHhZtfrx3cZvYZ3/vkSIuHjEJPXvB1UX/HfQZ3vVloMLGYfqbCr7pD1lg9wwyn3xE1
+d-i user-setup/allow-password-weak boolean true
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string {{ os['name'] }}
+d-i netcfg/get_domain string prs.local
+d-i mirror/country string manual
+d-i mirror/http/hostname string {{ release['pkg_repo'] | default(release['pxe_repo']) }}
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+d-i clock-setup/utc boolean true
+d-i clock-setup/ntp boolean true
+d-i time/zone string Europe/Warsaw
+d-i partman/confirm boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-auto/disk string /dev/[sv]da
+d-i partman-auto/method string lvm
+d-i partman-auto-lvm/guided_size string max
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto/expert_recipe string       \
+  boot-root ::                              \
+    200 500 1000 ext2                       \
+      $primary{ } $bootable{ }              \
+      method{ format } format { }           \
+      use_filesystem{ } filesystem { ext2 } \
+      mountpoint{ /boot }                   \
+    .                                       \
+    4000 8000 1000000000 lvm                \
+      $primary{ } $defaultignore { }        \
+      method{ lvm } vg_name { {{ os['name'] }} }  \
+    .                                       \
+    4000 8000 12000 ext2                    \
+      $lvmok{ } in_vg{ debian }             \
+      lv_name{ {{ version }} }              \
+      method{ format } format{ }            \
+      use_filesystem{ } filesystem { ext4 } \
+    .                                       \
+    1000 2000 4000 linux-swap               \
+      $lvmok{ } in_vg{ debian }             \
+      lv_name{ swap }}                      \
+      method{ swap } format{ }              \
+    .                                       \
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i grub-installer/grub2_instead_of_grub_legacy boolean true
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/bootdev string /dev/[sv]da
+d-i pkgsel/update-policy select none
+d-i pkgsel/include string openssh-server
+d-i finish-install/reboot_in_progress note

@@ -3,14 +3,14 @@
   hosts: netinstall
   vars_prompt:
   - name: distro
-    prompt: "Please type linux distribution name (centos|rhel|ol)"
+    prompt: "Please type linux distribution name (centos|rhel|ol|debian|opensuse)"
     private: no
   tasks:
   - name: "Cleanup pxe repo"
     block:
     - name: "Find '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' used pxe repo directories"
       tags: 
-      - finds
+      - find
       - umount
       - mountpoint
       - fstab
@@ -23,16 +23,16 @@
       tags: umount
       mount:
         path: "{{ item }}"
-        state: umounted
+        state: unmounted
       loop: "{{ _find['files'] | map(attribute='path') | list | difference( os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('version','defined') | map(attribute='version') | list | map('regex_replace','^', pxe_dir +'/'+ distro +'/') | list) }}"
-      when: item[0]['name'] != 'solaris'
+      when: distro != 'solaris'
     - name: "Remove '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' pxe mountpoints"
       tags: mountpoint
       file:
         path: "{{ item }}"
         state: absent
       loop: "{{ _find['files'] | map(attribute='path') | list | difference( os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('version','defined') | map(attribute='version') | list | map('regex_replace','^', pxe_dir +'/'+ distro +'/') | list) }}"
-      when: item[0]['name'] != 'solaris'
+      when: distro != 'solaris'
     - name: "Remove unused pxe fstab entries"
       tags: fstab
       replace:
@@ -57,16 +57,16 @@
       tags: umount
       mount:
         path: "{{ item }}"
-        state: umounted
+        state: unmounted
       loop: "{{ _find['files'] | map(attribute='path') | list | difference(os | selectattr('name','eq',distro) | list | map(attribute='repo_dir') | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('version','defined') | map(attribute='version') | list) | map('join','/') | list) }}"
-      when: item[0]['name'] != 'solaris'
+      when: distro != 'solaris'
     - name: "Remove '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' pkg mountpoints"
       tags: mountpoint
       file:
         path: "{{ item }}"
         state: absent
       loop: "{{ _find['files'] | map(attribute='path') | list | difference(os | selectattr('name','eq',distro) | list | map(attribute='repo_dir') | product(os | selectattr('name','eq',distro) | list | subelements('release') | flatten | selectattr('version','defined') | map(attribute='version') | list) | map('join','/') | list) }}"
-      when: item[0]['name'] != 'solaris'
+      when: distro != 'solaris'
     - name: "Remove unused pxe fstab entries"
       tags: fstab
       replace:

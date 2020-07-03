@@ -8,6 +8,15 @@ ntp_server:
 - 172.31.128.11
 - 172.31.128.10
 os:
+- name: debian
+  description: Debian
+  img_dir: "/export/soft/debian"
+  repo_dir: "/export/repo/debian"
+  release:
+  - version: "stable"
+    pxe_repo: "http://deb.debian.org/debian"
+    image:
+    - { name: "debian-stable-amd64-mini.iso", url: "http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/mini.iso", sum: "sha256:a749cb499cf4f335d1d4fbffb041353f6e41f5d0681b1d856cb167ed2c27e756" }
 - name: centos
   description: "CentOS"
   img_dir: "/export/soft/rhel"
@@ -60,16 +69,6 @@ os:
     pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64"
     image:
     - { name: "OracleLinux-R7-U8-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u8/x86_64/x86_64-boot.iso", sum: "sha256:28c333bab276251f4a0d13438cdd2386e5e83c5dd65f3444f785dd698a34f46f" }
-- name: debian
-  description: Debian
-  img_dir: "/export/soft/debian"
-  repo_dir: "/export/repo/debian"
-  release:
-  - version: "10.4"
-    pxe_repo: "http://{{ inventory_hostname }}/debian/10.4"
-    pkg_repo: "https://packages.debian.org/buster/repo"
-    image:
-    - { name: "debian-10.4.0-amd64-netinst.iso", url: "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.4.0-amd64-netinst.iso", sum: "sha256:ab3763d553330e90869487a6843c88f1d4aa199333ff16b653e60e59ac1fc60b" }
 - name: opensuse
   description: openSUSE
   img_dir: "/export/soft/opensuse"

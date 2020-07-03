@@ -1,0 +1,20 @@
+menu title {{ item['description'] }} {{ item['release'][0]['version'] }}
+label {{ item['name'] }}-install
+        menu label {{ item['description'] }} install
+        text help
+                For VMware E1000 interface type required
+                login: root    password: Welcome2
+        endtext
+        kernel mboot.c32
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -B install=true,install_media={{ item['release'][0]['pxe_repo'] }} --- solaris/platform/i86pc/amd64/boot_archive
+label {{ item['name'] }}-rescue
+        menu label {{ item['description'] }} rescue
+        text help
+                For VMware E1000 interface type required
+        endtext
+        kernel mboot.c32
+        append -solaris solaris/platform/i86pc/kernel/amd64/unix -v -m verbose -B install_media={{ item['release'][0]['pxe_repo'] }} --- solaris/platform/i86pc/amd64/boot_archive
+menu separator
+label back
+        menu Back
+        menu exit

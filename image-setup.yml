@@ -1,6 +1,10 @@
 ---
 - name: "Download, verify, mount install images for '{{ distro }}'"
   hosts: netinstall
+  vars_prompt:
+  - name: distro
+    prompt: "Please type linux distribution name (centos|rhel|ol|debian|opensuse)"
+    private: no
   tasks:
   - name: "Create '{{ os | selectattr('name','==',distro) | map(attribute='description') | list | first }}' image directory"
     tags: directory
