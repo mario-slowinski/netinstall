@@ -14,7 +14,7 @@ os:
   repo_dir: "/export/repo/debian"
   release:
   - version: "stable"
-    pxe_repo: "http://deb.debian.org/debian"
+    pxe_repo: "http://deb.debian.org"
     image:
     - { name: "debian-stable-amd64-mini.iso", url: "http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/mini.iso", sum: "sha256:a749cb499cf4f335d1d4fbffb041353f6e41f5d0681b1d856cb167ed2c27e756" }
 - name: centos

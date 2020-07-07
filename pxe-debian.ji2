@@ -12,7 +12,7 @@ menu title {{ item['description'] }}
                         login: root    password: Welcome2
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/linux
-                append initrd={{ item['name'] }}/{{ release['version'] }}/initrd.gz auto preseed/url=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+                append initrd={{ item['name'] }}/{{ release['version'] }}/initrd.gz netcfg/choose_interface=auto netcfg/get_hostname={{ item['name'] }} netcfg/hostname={{ item['name'] }} netcfg/get_domain={{ inventory_hostname | regex_replace('^.+?\.') }} auto-install/enable=true preseed/url=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
         label {{ item['name'] }}-rescue
                 menu label {{ item['description'] }} rescue
                 kernel {{ item['name'] }}/{{ release['version'] }}/linux
