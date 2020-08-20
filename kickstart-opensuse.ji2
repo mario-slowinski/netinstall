@@ -1,0 +1,197 @@
+{% set os = item[0] %}
+{% set release = item[1] %}
+{% set version = release['version'] | regex_replace('^([0-9]+)\\..*', '\\1')  %}
+<?xml version="1.0"?>
+<!DOCTYPE profile>
+<profile xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns">
+  <bootloader>
+    <global>
+      <append>mitigations=auto quiet</append>
+      <cpu_mitigations>auto</cpu_mitigations>
+      <gfxmode>auto</gfxmode>
+      <hiddenmenu>false</hiddenmenu>
+      <os_prober>true</os_prober>
+      <terminal>gfxterm</terminal>
+      <timeout config:type="integer">8</timeout>
+      <trusted_grub>false</trusted_grub>
+      <xen_kernel_append>vga=gfx-1024x768x16</xen_kernel_append>
+    </global>
+    <loader_type>grub2</loader_type>
+  </bootloader>
+
+  <networking>
+    <dns>
+      <dhcp_hostname config:type="boolean">true</dhcp_hostname>
+      <hostname>{{ os['name'] }}-{{ version }}</hostname>
+    </dns>
+    <interfaces config:type="list">
+      <interface>
+        <bootproto>dhcp</bootproto>
+        <device>eth0</device>
+        <startmode>auto</startmode>
+      </interface>
+    </interfaces>
+  </networking>
+
+  <general>
+    <mode>
+      <final_reboot config:type="boolean">true</final_reboot>
+      <confirm config:type="boolean">false</confirm>
+      <confirm_base_product_license config:type="boolean">false</confirm_base_product_license>
+    </mode>
+
+    <signature-handling>
+      <accept_file_without_checksum config:type="boolean">true</accept_file_without_checksum>
+      <accept_non_trusted_gpg_key config:type="boolean">true</accept_non_trusted_gpg_key>
+      <accept_unknown_gpg_key config:type="boolean">true</accept_unknown_gpg_key>
+      <accept_unsigned_file config:type="boolean">true</accept_unsigned_file>
+      <accept_verification_failed config:type="boolean">false</accept_verification_failed>
+      <import_gpg_key config:type="boolean">true</import_gpg_key>
+    </signature-handling>
+
+    <storage>
+      <start_multipath config:type="boolean">false</start_multipath>
+    </storage>
+
+    <proposals/>
+    <self_update>
+    </self_update>
+    <self_update_url>
+    </self_update_url>
+  </general>
+
+  <partitioning config:type="list">
+    <drive>
+      <device>/dev/sda</device>
+      <disklabel>gpt</disklabel>
+      <enable_snapshots config:type="boolean">false</enable_snapshots>
+      <initialize config:type="boolean">false</initialize>
+      <partitions config:type="list">
+        <partition>
+          <partition_nr config:type="integer">1</partition_nr>
+          <partition_id config:type="integer">263</partition_id>
+          <create config:type="boolean">true</create>
+          <resize config:type="boolean">false</resize>
+          <format config:type="boolean">false</format>
+          <size>8M</size>
+        </partition>
+        <partition>
+          <partition_nr config:type="integer">2</partition_nr>
+          <partition_id config:type="integer">131</partition_id>
+          <create config:type="boolean">true</create>
+          <resize config:type="boolean">false</resize>
+          <format config:type="boolean">true</format>
+          <filesystem config:type="symbol">btrfs</filesystem>
+          <create_subvolumes config:type="boolean">true</create_subvolumes>
+          <mount>/</mount>
+          <mountby config:type="symbol">uuid</mountby>
+          <size>8G</size>
+          <subvolumes config:type="list">
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>boot/grub2/i386-pc</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>tmp</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>boot/grub2/x86_64-efi</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>usr/local</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>home</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>opt</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>srv</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">true</copy_on_write>
+              <path>root</path>
+            </subvolume>
+            <subvolume>
+              <copy_on_write config:type="boolean">false</copy_on_write>
+              <path>var</path>
+            </subvolume>
+          </subvolumes>
+          <subvolumes_prefix><![CDATA[@]]></subvolumes_prefix>
+        </partition>
+      </partitions>
+      <type config:type="symbol">CT_DISK</type>
+      <use>all</use>
+    </drive>
+  </partitioning>
+
+  <keyboard>
+    <keymap>english-us</keymap>
+  </keyboard>
+  <language>
+    <language>en_US</language>
+    <languages/>
+  </language>
+  <login_settings/>
+  <timezone>
+    <hwclock>UTC</hwclock>
+    <timezone>Europe/Warsaw</timezone>
+  </timezone>
+
+  <ntp-client>
+    <ntp_policy>auto</ntp_policy>
+    <ntp_servers config:type="list">
+      <ntp_server>
+        <address>0.opensuse.pool.ntp.org</address>
+        <iburst config:type="boolean">true</iburst>
+        <offline config:type="boolean">false</offline>
+      </ntp_server>
+    </ntp_servers>
+    <ntp_sync>systemd</ntp_sync>
+  </ntp-client>
+
+  <users config:type="list">
+    <user>
+      <authorized_keys config:type="list">
+        <authorized_key>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSbplj7aA7u8AvWghMiwQXjTQD1riawbYmLwth7aNrYCrgLzAp/hyoj5c6YtPxjt2KHFNlcD0BWsTf6ETgLvKEHjGtMq8NQucu6HUY7qNIuovbfV+2G6TVFe4RG83pC3RQ6rIAStgdwLCkF28DWsp84vUHKAasQddzeJoE3nfBM3DmLDDp9pOh4OGS01OiZnTGkqXvEv+pk9Sc2r6adJuS1jF8sGQ90HcmHax3unSfkwsb430/ZK7kNsLV8p4hbmSln04PzcCLtDK69wEhy1d4SkwTqmylSmpMrtZ5KXAuKx9zeNVlAa9DjyGa+ULlBguh7gAN4alRo+9vtJlQiiI5 mariusz@g3</authorized_key>
+        <authorized_key>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJ9VRG64dE4rWSNnhTfd2nBwmVSR9Xch0pxuxQvZgYh6tD9xfQnM88VtosXKHvpcFiS7yVAIrSO/rX3GBPofXkpnlZBLm58smkhRqic0YwUGMBV4Z4aKnAj9tM6R6jL7OAekU36JYMK3IaGCZBw4yURrxMFzvPTneWL04+PMMWinTb/JMtftHnxgZXBcUMCWa+kgJKJEGtcyflawHxsqYnFpCt430ijIzwGZfAkFGtTorBSaSii0FJPQEB2Pt7Y0p0AQZ4goj9+hUV9IW2Eu74lIIQz/TlX+4b4fA0WL3m1HjHH0NimgABnLR6VnWw/YBVZgpJp5XSH7dxLoneDgn9 mariusz@u904</authorized_key>
+      </authorized_keys>
+      <encrypted config:type="boolean">true</encrypted>
+      <fullname>root</fullname>
+      <gid>0</gid>
+      <home>/root</home>
+      <home_btrfs_subvolume config:type="boolean">false</home_btrfs_subvolume>
+      <password_settings>
+        <expire/>
+        <flag/>
+        <inact/>
+        <max/>
+        <min/>
+        <warn/>
+      </password_settings>
+      <shell>/bin/bash</shell>
+      <uid>0</uid>
+      <user_password>$6$LPAH8N846T3P$4BXfdLGLm7ZAr/Ngob2QBAzKuM6QZ9uxkWDRybvbji5v5FqrB4/D/uffV6Lhn/h0MDa130uhIIbM.NyjY0q.H/</user_password>
+      <username>root</username>
+    </user>
+  </users>
+
+  <software>
+    <image/>
+    <install_recommended config:type="boolean">false</install_recommended>
+    <instsource/>
+    <packages config:type="list">
+      <package>perl</package>
+      <package>python</package>
+      <package>open-vm-tools</package>
+    </packages>
+  </software>
+
+</profile>

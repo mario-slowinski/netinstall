@@ -24,4 +24,5 @@
       group: root
       mode: 0644
       setype: tftpdir_t
-    loop: "{{ os | subelements('release') }}"
+    # no kickstart for solaris
+    loop: "{{ os | selectattr('name','ne','solaris') | list | subelements('release') }}"

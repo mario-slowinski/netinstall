@@ -5,18 +5,18 @@ menu title {{ item['description'] }}
         label {{ item['name'] }}-install
                 menu label {{ item['description'] }} installer
                 kernel {{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/linux
-                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ip=dhcp install={{ release['pxe_repo'] }}
+                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ifcfg=eth*=dhcp install={{ release['pkg_repo'] }}
         label {{ item['name'] }}-kickstart
                 menu label {{ item['description'] }} kickstart
                 text help
                         login: root    password: Welcome2
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/linux
-                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ip=dhcp install={{ release['pxe_repo'] }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ifcfg=eth*=dhcp install={{ release['pkg_repo'] }} autoyast=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
         label {{ item['name'] }}-rescue
                 menu label {{ item['description'] }} rescue
                 kernel {{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/linux
-                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ip=dhcp install={{ release['pxe_repo'] }} rescue
+                append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ifcfg=eth*=dhcp install={{ release['pkg_repo'] }} rescue
         menu separator
         label back
                 menu Back
