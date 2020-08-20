@@ -83,4 +83,4 @@ os:
   description: Oracle Solaris
   release:
   - version: "11"
-    pxe_repo: "http://{{ inventory_hostname }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555"
+    pxe_repo: "http://{{ lookup('dig', inventory_hostname) }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555"
