@@ -1,12 +1,15 @@
 ---
 pxe_dir: "/etc/netboot/pxelinux"
+
 http:
   user: webservd
   port: 80
   dir: "/export/repo"
+
 ntp_server:
 - 172.31.128.11
 - 172.31.128.10
+
 os:
 - name: debian
   description: Debian
@@ -17,6 +20,7 @@ os:
     pxe_repo: "http://deb.debian.org"
     image:
     - { name: "debian-stable-amd64-mini.iso", url: "http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/mini.iso", sum: "sha256:a749cb499cf4f335d1d4fbffb041353f6e41f5d0681b1d856cb167ed2c27e756" }
+
 - name: centos
   description: "CentOS"
   img_dir: "/export/soft/rhel"
@@ -30,11 +34,17 @@ os:
     pxe_repo: "http://mirror.centos.org/centos/7/os/x86_64"
     image:
     - { name: "CentOS-7-x86_64-NetInstall-2003.iso", url: "http://ftp.icm.edu.pl/pub/Linux/distributions/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-2003.iso", sum: "sha256:101bc813d2af9ccf534d112cbe8670e6d900425b297d1a4d2529c5ad5f226372"}
+
 - name: rhel
   description: "Red Hat Enterprise Linux Server"
   img_dir: "/export/soft/rhel"
   repo_dir: "/export/repo/rhel"
   release:
+  - version: "8.3"
+    pxe_repo: "http://{{ inventory_hostname }}/rhel/8.3"
+    pkg_repo: "http://{{ inventory_hostname }}/rhel/8.3/BaseOS"
+    image:
+    - { name: "rhel-8.3-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-8.3-x86_64-dvd.iso", sum: "sha256:30fd8dff2d29a384bd97886fa826fa5be872213c81e853eae3f9d9674f720ad0" }
   - version: "8.2"
     pxe_repo: "http://{{ inventory_hostname }}/rhel/8.2"
     pkg_repo: "http://{{ inventory_hostname }}/rhel/8.2/BaseOS"
@@ -45,10 +55,11 @@ os:
     pkg_repo: "http://{{ inventory_hostname }}/rhel/8.0/BaseOS"
     image:
     - { name: "rhel-8.0-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-8.0-x86_64-dvd.iso", sum: "sha256:005d4f88fff6d63b0fc01a10822380ef52570edd8834321de7be63002cc6cc43" }
-  - version: "7.8"
-    pxe_repo: "http://{{ inventory_hostname }}/rhel/7.8"
+  - version: "7.9"
+    pxe_repo: "http://{{ inventory_hostname }}/rhel/7.9"
     image:
-    - { name: "rhel-server-7.8-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-server-7.8-x86_64-dvd.iso", sum: "sha256:3ca2017f12392fc8acad435c05a941bb88620ece8eb5740278ffa61d8340792d" }
+    - { name: "rhel-server-7.9-x86_64-dvd.iso", url: "http://{{ inventory_hostname }}:{{ http['port'] }}/soft/rhel/rhel-server-7.9-x86_64-dvd.iso", sum: "sha256:19d653ce2f04f202e79773a0cbeda82070e7527557e814ebbce658773fbe8191" }
+
 - name: ol
   description: "Oracle Linux"
   img_dir: "/export/soft/oracle/linux"
@@ -64,11 +75,12 @@ os:
     pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL8/0/baseos/x86_64"
     image:
     - { name: "OracleLinux-R8-U0-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u0/x86_64/x86_64-boot.iso", sum: "sha256:aa90f678f7791bef79bfd9ad5b219de40949cdf77e2050131627d2c3270e63c1" }
-  - version: "7.8"
-    pxe_repo: "http://{{ inventory_hostname }}/ol/7.8"
+  - version: "7.9"
+    pxe_repo: "http://{{ inventory_hostname }}/ol/7.9"
     pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64"
     image:
-    - { name: "OracleLinux-R7-U8-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u8/x86_64/x86_64-boot.iso", sum: "sha256:28c333bab276251f4a0d13438cdd2386e5e83c5dd65f3444f785dd698a34f46f" }
+    - { name: "OracleLinux-R7-U9-x86_64-boot.iso", url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/x86_64-boot.iso", sum: "sha256:410cf1a9bce7aba3e2446768e935044baefe80b8aba966d59d10f61070797910" }
+
 - name: opensuse
   description: openSUSE
   img_dir: "/export/soft/opensuse"
@@ -79,6 +91,7 @@ os:
     pkg_repo: "http://download.opensuse.org/distribution/leap/15.1/repo/oss/"
     image:
     - { name: "openSUSE-Leap-15.1-NET-x86_64.iso", url: "https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso", sum: "sha256:609d0ad527ab13681b44e28326cd7941e87adfe8d522e2b31d0d7c71e9d92992" }
+
 - name: solaris
   description: Oracle Solaris
   release:

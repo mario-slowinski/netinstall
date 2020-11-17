@@ -1,5 +1,8 @@
 default vesamenu.c32
 
+timeout 300
+totaltimeout 6000
+
 menu clear
 menu background splash.png
 menu title PRS PXE installer
@@ -21,4 +24,4 @@ menu separator
 label local
         menu label Boot from local drive
         menu default
-        localboot 0xffff
+        localboot 0

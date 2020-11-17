@@ -65,3 +65,6 @@ This can be chaned by *image > url* variable.
 1. Optionally remove existing in filesystem but missing in vars file OS relase configs, dirs, mountpoints.
 
    ```bash
+   ansible-playbook cleanup.yml
+   ansible-playbook -e distro=[distribution] cleanup.yml
+   ```
