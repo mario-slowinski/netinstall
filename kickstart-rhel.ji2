@@ -80,12 +80,12 @@ sssd-ldap
 
 %post
 {% if version == "7" %}
-ln -sf /usr/bin/python2 /usr/bin/python
+update-alternatives --set python /usr/bin/python2
 {% elif version == "8" %}
+update-alternatives --set python /usr/bin/python3
+{% endif %}
 {% if os['name'] == 'rhel' %}
 sed -i 's#enabled=1#enabled=1\ngpgkey=http://{{ inventory_hostname }}/{{ os["name"] }}/{{ release["version"] }}/RPM-GPG-KEY-redhat-release#g' /etc/yum.repos.d/prs*
-{% endif %}
-ln -sf /usr/bin/python3 /usr/bin/python
 {% endif %}
 cat << EOF > /etc/profile.d/colorprompt.sh
 if [ `id | cut -c 5` -eq 0 ]; then
