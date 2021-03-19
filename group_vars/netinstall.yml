@@ -11,6 +11,16 @@ ntp_server:
 - 172.31.128.10
 
 os:
+- name: ubuntu
+  description: "Ubuntu Server"
+  img_dir: "/export/soft/ubuntu"
+  repo_dir: "/export/repo/ubuntu"
+  release:
+  - version: "focal"
+    pxe_repo: "http://deb.debian.org"
+    image:
+    - { name: "ubuntu-focal-amd64-mini.iso", url: "http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso", sum: "sha256:402167d5079405e1ff0204002ba90baacfa3a27ee47c8c1d7db628de4c9c77dd" }
+
 - name: debian
   description: Debian
   img_dir: "/export/soft/debian"
@@ -93,7 +103,7 @@ os:
     - { name: "openSUSE-Leap-15.1-NET-x86_64.iso", url: "https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso", sum: "sha256:609d0ad527ab13681b44e28326cd7941e87adfe8d522e2b31d0d7c71e9d92992" }
 
 - name: solaris
-  description: Oracle Solaris
+  description: "Oracle Solaris"
   release:
   - version: "11"
     pxe_repo: "http://{{ lookup('dig', inventory_hostname) }}:5555//export/install/solaris/i386_s11-4,install_service=default-i386,install_svc_address={{ lookup('dig', inventory_hostname) }}:5555"
