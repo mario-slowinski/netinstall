@@ -1,0 +1,19 @@
+---
+netinstall_pxelinux: "/etc/netboot/pxelinux"
+
+netinstall_httpd:
+  user: webservd
+  port: 80
+  dir: "/export/repo"
+
+netinstall_ntp:
+  - 172.31.128.11
+  - 172.31.128.10
+
+netinstall_distros:
+  - "{{ centos }}"
+  - "{{ rhel }}"
+  - "{{ ol }}"
+  - "{{ ubuntu }}"
+  - "{{ opensuse }}"
+  - "{{ solaris }}"

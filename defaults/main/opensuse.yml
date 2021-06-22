@@ -1,0 +1,14 @@
+---
+opensuse:
+  name: opensuse
+  description: openSUSE
+  img_dir: "/export/soft/opensuse"
+  repo_dir: "/export/repo/opensuse"
+  release:
+    - version: "15.1"
+      pxe_repo: "http://{{ inventory_hostname }}/opensuse/15.1"
+      pkg_repo: "http://download.opensuse.org/distribution/leap/15.1/repo/oss/"
+      image:
+        - name: "openSUSE-Leap-15.1-NET-x86_64.iso"
+          url: "https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso"
+          sum: "sha256:609d0ad527ab13681b44e28326cd7941e87adfe8d522e2b31d0d7c71e9d92992"
