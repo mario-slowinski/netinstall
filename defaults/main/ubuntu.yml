@@ -1,0 +1,13 @@
+---
+ubuntu:
+  name: ubuntu
+  description: "Ubuntu Server"
+  img_dir: "/export/soft/ubuntu"
+  repo_dir: "/export/repo/ubuntu"
+  release:
+    - version: "focal"
+      pxe_repo: "http://deb.debian.org"
+      image:
+        - name: "ubuntu-focal-amd64-mini.iso"
+          url: "http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso"
+          sum: "sha256:402167d5079405e1ff0204002ba90baacfa3a27ee47c8c1d7db628de4c9c77dd"
