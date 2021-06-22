@@ -12,7 +12,7 @@ menu title {{ item['description'] }}
                         login: root    password: Welcome2
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
-                append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
+                append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} inst.ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }} inst.cmdline
         label {{ item['name'] }}-rescue
                 menu label {{ item['description'] }} rescue
                 kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
