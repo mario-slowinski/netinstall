@@ -1,0 +1,30 @@
+---
+- name: "Create image directory"
+  tags: netinstall.image.directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item['img_dir'] }}"
+    owner: "{{ netinstall_httpd['owner'] }}"
+    group: "{{ netinstall_httpd['group'] }}"
+    mode: "{{ netinstall_httpd['mode']['directory'] }}"
+    setype: "{{ netinstall_httpd['setype'] }}"
+  loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros, true)) | selectattr('img_dir', 'defined') }}"
+  # select defined 'distro' or all distros when 'distro' is not defined skipping the ones with 'img_dir' undefined
+  loop_control:
+    label: "{{ item['img_dir'] }}"
+
+- name: "Download image"
+  tags: netinstall.image.download
+  ansible.builtin.get_url:
+    url: "{{ item[1]['image']['url'] }}"
+    # for rhel just verify iso image checksum by pretending to download it into common soft directory
+    dest: "{{ item[0]['img_dir'] +'/'+ item[1]['image']['name'] }}"
+    checksum: "{{ item[1]['image']['sum'] }}"
+    owner: "{{ netinstall_httpd['owner'] }}"
+    group: "{{ netinstall_httpd['group'] }}"
+    mode: "{{ netinstall_httpd['mode']['file'] }}"
+    setype: "{{ netinstall_httpd['setype'] }}"
+  loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros, true)) \
+              | selectattr('img_dir', 'defined') | subelements('releases') }}"
+  loop_control:
+    label: "{{ item[0]['img_dir'] }}/{{ item[1]['image']['name'] }}"
