@@ -1,15 +1,7 @@
 ---
-netinstall_pxelinux: "/etc/netboot/pxelinux"
-
-netinstall_httpd:
-  owner: "root"
-  group: "root"
-  mode:
-    directory: 0o755
-    file: 0o644
-  setype: "httpd_sys_content_t"
-  port: 80
-  dir: "/export/repo"
+netinstall_pxelinux: "{{ lookup('vars', ansible_os_family+'_pxelinux') }}"
+netinstall_mount: "{{ lookup('vars', ansible_os_family+'_mount') }}"
+netinstall_httpd: "{{ lookup('vars', ansible_os_family+'_httpd') }}"
 
 netinstall_ntp:
   - 172.31.128.11
