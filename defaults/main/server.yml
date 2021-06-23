@@ -2,7 +2,12 @@
 netinstall_pxelinux: "/etc/netboot/pxelinux"
 
 netinstall_httpd:
-  user: webservd
+  owner: "root"
+  group: "root"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "httpd_sys_content_t"
   port: 80
   dir: "/export/repo"
 
