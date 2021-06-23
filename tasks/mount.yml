@@ -1,0 +1,27 @@
+---
+- name: "Mount image as repo"
+  tags: netinstall.mount.repo
+  ansible.posix.mount:
+    src: "{{ item[0]['img_dir'] +'/'+ item[1]['image']['name'] }}"
+    path: "{{ item[0]['repo_dir'] +'/'+ item[1]['version'] }}"
+    fstype: "{{ netinstall_mount['fs'] }}"
+    opts: "{{ netinstall_mount['opts'] }}"
+    state: mounted
+  loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros, true)) \
+              | selectattr('img_dir', 'defined') | subelements('releases') }}"
+  loop_control:
+    label: "{{ item[0]['img_dir'] }}/{{ item[1]['image']['name'] }} -> {{ item[0]['repo_dir'] +'/'+ item[1]['version'] }}"
+  when: item[0]['name'] != 'solaris'
+
+- name: "Mount pxe"
+  tags: netinstall.mount.pxe
+  ansible.posix.mount:
+    src: "{{ item[0]['repo_dir'] +'/'+ item[1]['version'] }}"
+    path: "{{ pxe_dir +'/'+ item[0]['name'] + '/'+ item[1]['version'] }}"
+    fstype: "{{ netinstall_mount['fs'] }}"
+    opts: "{{ netinstall_mount['bind'] }}"
+    state: mounted
+  loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros, true)) \
+              | selectattr('img_dir', 'defined') | subelements('releases') }}"
+  loop_control:
+    label: "{{ item[0]['repo_dir'] }}/{{ item[1]['version'] }} -> {{ pxe_dir +'/'+ item[0]['name'] + '/'+ item[1]['version'] }}"
