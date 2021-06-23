@@ -1,0 +1,16 @@
+---
+Solaris_pxelinux: "/etc/netboot/pxelinux"
+Solaris_mount:
+  fs: "hsfs"
+  opts: "ro,nosuid,noglobal,maplcase,rr,traildot"
+  bind: "ro"
+
+Solaris_httpd:
+  owner: "webservd"
+  group: "webservd"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "httpd_sys_content_t"
+  port: 80
+  dir: "/export/repo"
