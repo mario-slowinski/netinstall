@@ -1,11 +1,11 @@
 default vesamenu.c32
 
-timeout 300
-totaltimeout 6000
+timeout {{ netinstall_pxe['timeout'] }}
+totaltimeout {{ netinstall_pxe['totaltimeout'] }}
 
 menu clear
 menu background splash.png
-menu title PRS PXE installer
+menu title {{ netinstall_pxe['title'] }}
 menu vshift 8
 menu rows 18
 menu margin 8
@@ -13,8 +13,8 @@ menu margin 8
 menu helpmsgrow 15
 menu tabmsgrow 13
 
-{% for system in os %}
-include pxelinux.cfg/{{ system['name'] }} {{ system['description'] }}
+{% for distro in netinstall_distros %}
+include pxelinux.cfg/{{ distro['name'] }} {{ distro['description'] }}
 {% endfor %}
 
 menu separator
