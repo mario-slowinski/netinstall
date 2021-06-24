@@ -27,7 +27,7 @@ selinux --enforcing
 # Root password
 rootpw --iscrypted $6$eO8qpM9rbw7XB4F1$4a9etAPLLmX4MPi9GVd0eHhZtfrx3cZvYZ3/vkSIuHjEJPXvB1UX/HfQZ3vVloMLGYfqbCr7pD1lg9wwyn3xE1
 # System timezone
-timezone Europe/Warsaw --isUtc --ntpserver={{ ntp_server | join(',') }}
+timezone Europe/Warsaw --isUtc --ntpserver={{ netinstall_ntp | join(',') }}
 services --enabled="chronyd"
 # System bootloader configuration
 bootloader --append=" crashkernel=auto" --location=mbr --boot-drive=sda
@@ -44,16 +44,16 @@ reboot
 
 {% if os['name'] == 'rhel' %}
 {% if version == '7' %}
-repo --name=prs --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
+repo --name={{ netinstall_pxe['name'] }} --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
 {% elif version == '8' %}
-repo --name="prs-BaseOS" --baseurl={{ release['pkg_repo']| default(release['pxe_repo']) }} --install
-repo --name="prs-AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('BaseOS','AppStream') | regex_replace('baseos','appstream') }} --install
+repo --name="{{ netinstall_pxe['name'] }}-BaseOS" --baseurl={{ release['pkg_repo']| default(release['pxe_repo']) }} --install
+repo --name="{{ netinstall_pxe['name'] }}-AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('BaseOS','AppStream') | regex_replace('baseos','appstream') }} --install
 {% endif %}
 {% elif os['name'] == 'ol' %}
 {% if version == '7' %}
-repo --name=prs --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
+repo --name={{ netinstall_pxe['name'] }} --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) }} --install
 {% elif version == '8' %}
-repo --name="AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('latest/','') | regex_replace('baseos','appstream') }}
+repo --name="{{ netinstall_pxe['name'] }}-AppStream" --baseurl={{ release['pkg_repo'] | default(release['pxe_repo']) | regex_replace('latest/','') | regex_replace('baseos','appstream') }}
 {% endif %}
 {% endif %}
 
@@ -85,7 +85,7 @@ update-alternatives --set python /usr/bin/python2
 update-alternatives --set python /usr/bin/python3
 {% endif %}
 {% if os['name'] == 'rhel' %}
-sed -i 's#enabled=1#enabled=1\ngpgkey=http://{{ inventory_hostname }}/{{ os["name"] }}/{{ release["version"] }}/RPM-GPG-KEY-redhat-release#g' /etc/yum.repos.d/prs*
+sed -i 's#enabled=1#enabled=1\ngpgkey=http://{{ inventory_hostname }}/{{ os["name"] }}/{{ release["version"] }}/RPM-GPG-KEY-redhat-release#g' /etc/yum.repos.d/netinstall*
 {% endif %}
 cat << EOF > /etc/profile.d/colorprompt.sh
 if [ `id | cut -c 5` -eq 0 ]; then

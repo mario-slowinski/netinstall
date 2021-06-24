@@ -148,11 +148,13 @@
   <ntp-client>
     <ntp_policy>auto</ntp_policy>
     <ntp_servers config:type="list">
+{%  for ntp_server in netinstall_ntp %}
       <ntp_server>
-        <address>0.opensuse.pool.ntp.org</address>
+        <address>{{ ntp_server }}</address>
         <iburst config:type="boolean">true</iburst>
         <offline config:type="boolean">false</offline>
       </ntp_server>
+{% endfor %}
     </ntp_servers>
     <ntp_sync>systemd</ntp_sync>
   </ntp-client>
