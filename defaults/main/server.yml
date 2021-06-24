@@ -5,6 +5,7 @@ netinstall_httpd: "{{ lookup('vars', ansible_os_family+'_httpd') }}"
 netinstall_tftpd: "{{ lookup('vars', ansible_os_family+'_tftpd') }}"
 
 netinstall_pxe:
+  name: "netinstall"
   title: "PXE installer"
   timeout: 300
   totaltimeout: 6000

@@ -14,7 +14,7 @@ d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
 d-i clock-setup/utc boolean true
 d-i clock-setup/ntp boolean true
-d-i clock-setup/ntp-server string {{ ntp_server[0] }}
+d-i clock-setup/ntp-server string {{ netinstall_ntp[0] }}
 d-i time/zone string Europe/Warsaw
 d-i partman/confirm boolean true
 d-i partman/choose_partition select finish
