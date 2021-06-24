@@ -1,5 +1,4 @@
 ---
-Solaris_pxelinux: "/etc/netboot/pxelinux"
 Solaris_mount:
   fs: "hsfs"
   opts: "ro,nosuid,noglobal,maplcase,rr,traildot"
@@ -13,4 +12,12 @@ Solaris_httpd:
     file: 0o644
   setype: "httpd_sys_content_t"
   port: 80
-  dir: "/export/repo"
+
+Solaris_tftpd:
+  owner: "root"
+  group: "root"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "tftpdir_t"
+  path: "/etc/netboot/pxelinux"
