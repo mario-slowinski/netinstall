@@ -1,70 +1,99 @@
-# Ansible playbooks to configure network boot/install of various linux releases
+netinstall
+==========
 
-## Table of contents
+Ansible role to configure network installation server.
 
-* [Requirements](#requirements)
-* [Configuration](#configuration)
-* [Deployment](#deployment)
+Requirements
+------------
 
-## Requirements
+* [ansible.builtin](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
+* [ansible.posix](https://docs.ansible.com/ansible/latest/collections/ansible/posix/index.html)
+* [Jinja2](https://jinja.palletsprojects.com/en/3.0.x/templates)
 
-* ansible
-* python-3 (and modules)
-  * netaddr
-  * jinja2
-* existing machine with
-  * configured PXE service
-  * configured HTTP service
+Role Variables
+--------------
 
-## Configuration
+* defaults
 
-Deployment configuration is based on **group names**, so please don't change them.
+  * `httpd.yml`
 
-Most settings (if not all) in variable files:
+    ```yaml
+    netinstall_VirtualHosts: {}   # httpd configuration, mainly DocumentRoot
+    ```
 
-* `group_vars/netinstall` - general configuration settings and linux releases details
+  * `server.yml`
 
-  * *img_dir* - directory with OS ISO images
-  * *repo_dir* - directory where ISO is to be mounted, this directory must be available via http
-  * release
-    * *pxe_repo* - http url where boot stage2 image is located, this directory must be available via http
-    * *pkg_repo* - http url where rpm pkgs are located
-    * *image* - http url of ISO image location
+    ```yaml
+    netinstall_base: ""           # base repo directory
+    netinstall_pxe: {}            # PXE server configuration
+    netinstall_ntp: []            # list of NTP servers used in kickstart
+    netinstall_distros: []        # list of OS distributions for network install
+    ```
 
-## Deployment
+    * `centos.yml`
+    * `debian.yml`
+    * `ol.yml`
+    * `opensuse.yml`
+    * `rhel.yml`
+    * `solaris.yml`
+    * `ubuntu.yml`
 
-Adjust **variables** accordingly.
-For RHEL download full DVD ISO image and put it in *img_dir*.
-For other distributions boot ISO image will be downloaded from the internet.
-This can be chaned by *image > url* variable.
+* vars
 
-### Playbooks should be run in the following order
+  ```yaml
+  <ansible_os_family>_mount: {} # iso and loopback mount attributes
+  <ansible_os_family>_httpd: {} # attributes of files presented by httpd
+  <ansible_os_family>_tftpd: {} # attributes of files presented by tftpd
+  ```
 
-1. Download/verify OS ISO image and mount it at *repo_dir*, mount by lofs *repo_dir* to *pxe_repo*.
+Dependencies
+------------
 
-   If *distribution* not provided as extra_var in command line ansible will ask for it interactively.
+* [httpd](https://github.com/mario-slowinski/httpd)
+  * [service](https://github.com/mario-slowinski/service)
+    * [software](https://github.com/mario-slowinski/software)
 
-   *[distribution]* is one of below:
-   * centos
-   * rhel
-   * ol
-   * opensuse
-   * debian
+Tags
+----
 
-   ```bash
-   ansible-playbook image-setup.yml
-   ansible-playbook -e distro=[distribution] image-setup.yml
-   ```
+* netinstall.image
+  * netinstall.image.directory
+  * netinstall.image.download
+* netinstall.mount
+  * netinstall.mount.repo
+  * netinstall.mount.pxe
+* netinstall.pxe
+  * netinstall.pxe.directory
+  * netinstall.pxe.menu
+  * netinstall.pxe.kickstart
+* netinstall.clean
 
-1. Create PXE configuration, PXE menu and kickstart file for each OS release.
+Example Playbook
+----------------
 
-   ```bash
-   ansible-playbook pxe-setup.yml
-   ```
+* `requirements.yml`
 
-1. Optionally remove existing in filesystem but missing in vars file OS relase configs, dirs, mountpoints.
+  ```yaml
+  - name: netinstall
+    src: https://github.com/mario-slowinski/netinstall
+  ```
 
-   ```bash
-   ansible-playbook cleanup.yml
-   ansible-playbook -e distro=[distribution] cleanup.yml
-   ```
+* playbook usage
+
+  ```yaml
+  - hosts: servers
+    gather_facts: true  # to get ansible_os_family
+
+    roles:
+      - role: netinstall
+  ```
+
+License
+-------
+
+[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
+
+Author Information
+------------------
+
+[mario.slowinski@gmail.com](mailto:mario.slowinski@gmail.com)
