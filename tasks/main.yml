@@ -10,3 +10,9 @@
     - netinstall
     - netinstall.mount
   ansible.builtin.import_tasks: mount.yml
+
+- name: "Configure pxe"
+  tags:
+    - netinstall
+    - netinstall.pxe
+  ansible.builtin.import_tasks: pxe.yml
