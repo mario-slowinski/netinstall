@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: mario_slowinski
+  description: Configure network install server
+
+  license: GPL-3.0-only
+
+  min_ansible_version: 2.10
+
+  platforms:
+    - name: GenericLinux
+      versions:
+        - any
+    - name: Solaris
+      versions:
+        - any
+
+  galaxy_tags:
+    - netinstall
+    - httpd
+    - pxe
+
+dependencies:
+  - src: https://github.com/mario-slowinski/httpd
+    name: httpd
