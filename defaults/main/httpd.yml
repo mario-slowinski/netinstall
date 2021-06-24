@@ -1,0 +1,12 @@
+netinstall_VirtualHosts:
+  - ServerName: "{{ inventory_hostname }}"
+    Listen: 80
+    ServerAlias: "{{ inventory_hostname }}"
+    DocumentRoot: /var/www/html
+    directives:
+      - Directory: "/var/www/html"
+        options:
+          - Require: "all granted"
+      - Directory: "/export/repo"
+        options:
+          - Require: "all granted"
