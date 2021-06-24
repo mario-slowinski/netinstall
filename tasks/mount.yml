@@ -17,7 +17,7 @@
   tags: netinstall.mount.pxe
   ansible.posix.mount:
     src: "{{ item[0]['repo_dir'] +'/'+ item[1]['version'] }}"
-    path: "{{ pxe_dir +'/'+ item[0]['name'] + '/'+ item[1]['version'] }}"
+    path: "{{ netinstall_tftpd['path'] +'/'+ item[0]['name'] + '/'+ item[1]['version'] }}"
     fstype: "{{ netinstall_mount['fs'] }}"
     opts: "{{ netinstall_mount['bind'] }}"
     state: mounted

@@ -1,5 +1,4 @@
 ---
-RedHat_pxelinux: "/var/lib/tftpboot/pxelinux"
 RedHat_mount:
   fs: iso9660
   opts: "ro,loop"
@@ -13,4 +12,12 @@ RedHat_httpd:
     file: 0o644
   setype: "httpd_sys_content_t"
   port: 80
-  dir: "/export/repo"
+
+RedHat_tftpd:
+  owner: "root"
+  group: "root"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "tftpdir_t"
+  path: "/var/lib/tftpboot/pxelinux"
