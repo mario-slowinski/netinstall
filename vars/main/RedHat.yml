@@ -5,8 +5,8 @@ RedHat_mount:
   bind: "ro,bind"
 
 RedHat_httpd:
-  owner: "root"
-  group: "root"
+  owner: "apache"
+  group: "apache"
   mode:
     directory: 0o755
     file: 0o644
