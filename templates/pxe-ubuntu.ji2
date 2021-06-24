@@ -1,5 +1,5 @@
 menu title {{ item['description'] }}
-{% for release in item['release'] %}
+{% for release in item['releases'] %}
         menu begin {{ release['version'] }}
         menu title {{ item['description'] }} {{ release['version'] }}
         label {{ item['name'] }}-install
