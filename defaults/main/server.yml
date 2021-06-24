@@ -1,4 +1,6 @@
 ---
+netinstall_base: /export/repo
+
 netinstall_pxelinux: "{{ lookup('vars', ansible_os_family+'_pxelinux') }}"
 netinstall_mount: "{{ lookup('vars', ansible_os_family+'_mount') }}"
 netinstall_httpd: "{{ lookup('vars', ansible_os_family+'_httpd') }}"
