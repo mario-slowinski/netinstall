@@ -12,7 +12,7 @@
 - name: "Create PXE menu files"
   tags: netinstall.pxe.menu
   ansible.builtin.template:
-    src: "pxe-{{ item['name'] }}.ji2"
+    src: "pxe/{{ item['name'] }}.ji2"
     dest: "{{ netinstall_tftpd['path'] }}/pxelinux.cfg/{{ item['name'] }}"
     owner: "{{ netinstall_tftpd['owner'] }}"
     group: "{{ netinstall_tftpd['group'] }}"
@@ -27,7 +27,7 @@
 - name: "Create kickstart file for each distribution major release"
   tags: netinstall.pxe.kickstart
   ansible.builtin.template:
-    src: "kickstart-{{ item[0]['name'] }}.ji2"
+    src: "kickstart/{{ item[0]['name'] }}.ji2"
     dest: "{{ item[0]['repo_dir'] | dirname }}/{{ item[0]['name'] }}/kickstart-{{ item[1]['version'] }}"
     owner: "{{ netinstall_httpd['owner'] }}"
     group: "{{ netinstall_httpd['group'] }}"
@@ -35,7 +35,6 @@
     setype: "{{ netinstall_httpd['setype'] }}"
   # select defined 'distro' or all distros when 'distro' is not defined skipping the ones with 'img_dir' undefined
   # no kickstart for solaris
-  #loop: "{{ os | selectattr('name','ne','solaris') | list | subelements('release') }}"
   loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros | rejectattr('name','eq','solaris'), true)) | subelements('releases') }}"
   loop_control:
     label: "{{ item[0]['name'] }}-{{ item[1]['version'] }}"
