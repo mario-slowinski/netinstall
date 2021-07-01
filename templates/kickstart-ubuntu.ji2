@@ -17,7 +17,7 @@ autoinstall:
     install-server: yes
   identity:
     hostname: {{ os['name'] }}-{{ version }}
-    password: "$6$FhcddHFVZ7ABA4Gi$9l4yURWASWe8xEa1jzI0bacVLvhe3Yn4/G3AnU11K3X0yu/mICVRxfo6tZTB2noKljlIRzjkVZPocdf63MtzC0" # root
+    password: "{{ netinstall_password | password_hash(netinstall_password_hash, 65534 | random(seed=os['name']) | string) }}"
     username: ubuntu # root doesn't work
   packages:
     - open-vm-tools

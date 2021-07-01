@@ -21,3 +21,5 @@ RedHat_tftpd:
     file: 0o644
   setype: "tftpdir_t"
   path: "/var/lib/tftpboot/pxelinux"
+
+RedHat_password_hash: "sha512"

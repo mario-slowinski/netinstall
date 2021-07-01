@@ -15,28 +15,27 @@ Role Variables
 
 * defaults
 
+  * `main.yml`
+
+    ```yaml
+    netinstall_base: ""           # base repo directory
+    netinstall_password: ""       # password used in kickstart
+    netinstall_ntp: []            # list of NTP servers used in kickstart
+    netinstall_pxe: {}            # PXE server configuration
+    netinstall_distros:           # list of OS distributions for network install
+      - "{{ centos }}"
+      - "{{ rhel }}"
+      - "{{ ol }}"
+      - "{{ ubuntu }}"
+      - "{{ opensuse }}"
+      - "{{ solaris }}"
+    ```
+
   * `httpd.yml`
 
     ```yaml
     netinstall_VirtualHosts: {}   # httpd configuration, mainly DocumentRoot
     ```
-
-  * `server.yml`
-
-    ```yaml
-    netinstall_base: ""           # base repo directory
-    netinstall_pxe: {}            # PXE server configuration
-    netinstall_ntp: []            # list of NTP servers used in kickstart
-    netinstall_distros: []        # list of OS distributions for network install
-    ```
-
-    * `centos.yml`
-    * `debian.yml`
-    * `ol.yml`
-    * `opensuse.yml`
-    * `rhel.yml`
-    * `solaris.yml`
-    * `ubuntu.yml`
 
 * vars
 

@@ -6,7 +6,7 @@ d-i debian-installer/language string en
 d-i debian-installer/country string PL
 d-i keyboard-configuration/xkb-keymap select us
 d-i passwd/make-user boolean false
-d-i passwd/root-password-crypted password $6$eO8qpM9rbw7XB4F1$4a9etAPLLmX4MPi9GVd0eHhZtfrx3cZvYZ3/vkSIuHjEJPXvB1UX/HfQZ3vVloMLGYfqbCr7pD1lg9wwyn3xE1
+d-i passwd/root-password-crypted password {{ netinstall_password | password_hash(netinstall_password_hash, 65534 | random(seed=os['name']) | string) }}
 d-i user-setup/allow-password-weak boolean true
 d-i mirror/country string manual
 d-i mirror/http/hostname string {{ release['pkg_repo'] | default(release['pxe_repo']) }}
