@@ -9,7 +9,7 @@ menu title {{ item['description'] }}
         label {{ item['name'] }}-kickstart
                 menu label {{ item['description'] }} preseed
                 text help
-                        login: root    password: Welcome2
+                        login: root    password: {{ netinstall_password }}
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/linux
                 append initrd={{ item['name'] }}/{{ release['version'] }}/initrd.gz netcfg/choose_interface=auto netcfg/get_hostname={{ item['name'] }} netcfg/hostname={{ item['name'] }} netcfg/get_domain={{ inventory_hostname | regex_replace('^.+?\.') }} auto-install/enable=true preseed/url=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}

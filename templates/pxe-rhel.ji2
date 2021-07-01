@@ -9,7 +9,7 @@ menu title {{ item['description'] }}
         label {{ item['name'] }}-kickstart
                 menu label {{ item['description'] }} kickstart
                 text help
-                        login: root    password: Welcome2
+                        login: root    password: {{ netinstall_password }}
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/isolinux/vmlinuz
                 append initrd={{ item['name'] }}/{{ release['version'] }}/isolinux/initrd.img ip=dhcp inst.stage2={{ release['pxe_repo'] }} inst.repo={{ release['pkg_repo'] | default(release['pxe_repo']) }} inst.ks=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }} inst.cmdline

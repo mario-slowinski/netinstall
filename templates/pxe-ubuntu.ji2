@@ -9,7 +9,7 @@ menu title {{ item['description'] }}
         label {{ item['name'] }}-kickstart
                 menu label {{ item['description'] }} preseed
                 text help
-                        login: ubuntu    password: Welcome2
+                        login: ubuntu    password: {{ netinstall_password }}
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/linux
                 append vga=788 fb=false initrd={{ item['name'] }}/{{ release['version'] }}/initrd.gz --- autoinstall net.ifnames=0 biosdevname=0 ip=dhcp ipv6.disable=1 ds=nocloud-net;s=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}

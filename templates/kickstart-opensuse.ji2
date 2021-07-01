@@ -180,7 +180,7 @@
       </password_settings>
       <shell>/bin/bash</shell>
       <uid>0</uid>
-      <user_password>$6$LPAH8N846T3P$4BXfdLGLm7ZAr/Ngob2QBAzKuM6QZ9uxkWDRybvbji5v5FqrB4/D/uffV6Lhn/h0MDa130uhIIbM.NyjY0q.H/</user_password>
+      <user_password>{{ netinstall_password | password_hash(netinstall_password_hash, 65534 | random(seed=os['name']) | string) }}</user_password>
       <username>root</username>
     </user>
   </users>

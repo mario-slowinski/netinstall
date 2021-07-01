@@ -9,7 +9,7 @@ menu title {{ item['description'] }}
         label {{ item['name'] }}-kickstart
                 menu label {{ item['description'] }} kickstart
                 text help
-                        login: root    password: Welcome2
+                        login: root    password: {{ netinstall_password }}
                 endtext
                 kernel {{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/linux
                 append initrd={{ item['name'] }}/{{ release['version'] }}/boot/x86_64/loader/initrd ifcfg=eth*=dhcp install={{ release['pkg_repo'] }} autoyast=http://{{ inventory_hostname }}/{{ item['name'] }}/kickstart-{{ release['version'] }}
