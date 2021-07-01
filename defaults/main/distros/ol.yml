@@ -9,9 +9,9 @@ ol:
       pxe_repo: "http://{{ inventory_hostname }}/ol/8.latest"
       pkg_repo: "http://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64"
       image:
-        name: "OracleLinux-R8-U2-x86_64-boot.iso"
-        url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u2/x86_64/x86_64-boot.iso"
-        sum: "sha256:a7d0db29491f886e60f213ad6a297f70b180a1b8720999f8ed861ab4d56df5e8"
+        name: "OracleLinux-R8-U4-x86_64-boot.iso"
+        url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u4/x86_64/x86_64-boot.iso"
+        sum: "sha256:{{ lookup('url', 'https://linux.oracle.com/security/gpg/checksum/OracleLinux-R8-U4-Server-x86_64.checksum', wantlist=True) | select('search','x86_64-boot.iso') | first | regex_replace(' +x86_64-boot.iso') }}"
 
     - version: "8.0"
       pxe_repo: "http://{{ inventory_hostname }}/ol/8.0"
@@ -19,7 +19,7 @@ ol:
       image:
         name: "OracleLinux-R8-U0-x86_64-boot.iso"
         url: "https://yum.oracle.com/ISOS/OracleLinux/OL8/u0/x86_64/x86_64-boot.iso"
-        sum: "sha256:aa90f678f7791bef79bfd9ad5b219de40949cdf77e2050131627d2c3270e63c1"
+        sum: "sha256:{{ lookup('url', 'https://linux.oracle.com/security/gpg/checksum/OracleLinux-R8-U0-Server-x86_64.checksum', wantlist=True) | select('search','x86_64-boot.iso') | first | regex_replace(' +x86_64-boot.iso') }}"
 
     - version: "7.9"
       pxe_repo: "http://{{ inventory_hostname }}/ol/7.9"
@@ -27,4 +27,4 @@ ol:
       image:
         name: "OracleLinux-R7-U9-x86_64-boot.iso"
         url: "https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/x86_64-boot.iso"
-        sum: "sha256:410cf1a9bce7aba3e2446768e935044baefe80b8aba966d59d10f61070797910"
+        sum: "sha256:{{ lookup('url', 'https://linux.oracle.com/security/gpg/checksum/OracleLinux-R7-U9-Server-x86_64.checksum', wantlist=True) | select('search','x86_64-boot.iso') | first | regex_replace(' +x86_64-boot.iso') }}"
