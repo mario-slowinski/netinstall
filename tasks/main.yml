@@ -3,16 +3,16 @@
   tags:
     - netinstall
     - netinstall.image
-  ansible.builtin.import_tasks: image.yml
+  ansible.builtin.import_tasks: image.yaml
 
 - name: "Mount image"
   tags:
     - netinstall
     - netinstall.mount
-  ansible.builtin.import_tasks: mount.yml
+  ansible.builtin.import_tasks: mount.yaml
 
 - name: "Configure pxe"
   tags:
     - netinstall
     - netinstall.pxe
-  ansible.builtin.import_tasks: pxe.yml
+  ansible.builtin.import_tasks: pxe.yaml
