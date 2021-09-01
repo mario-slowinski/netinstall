@@ -11,4 +11,9 @@ opensuse:
       image:
         name: "openSUSE-Leap-15.1-NET-x86_64.iso"
         url: "https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso"
-        sum: "sha256:{{ lookup('url', 'https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso.sha256', wantlist=True) | select('search','x86_64.iso') | first | regex_replace(' +.*') }}"
+        sum: >-
+          sha256:
+          {{- lookup('url', 'https://download.opensuse.org/distribution/leap/15.1/iso/openSUSE-Leap-15.1-NET-x86_64.iso.sha256', wantlist=True)
+          | select('search','x86_64.iso')
+          | first
+          | regex_replace(' +.*') }}
