@@ -10,4 +10,9 @@ debian:
       image:
         name: "debian-stable-amd64-mini.iso"
         url: "http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/mini.iso"
-        sum: "sha256:{{ lookup('url', 'http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/SHA256SUMS', wantlist=True) | select('search','netboot/mini.iso') | first | regex_replace(' +.*$') }}"
+        sum: >-
+          sha256:
+          {{- lookup('url', 'http://ftp.pl.debian.org/debian/dists/stable/main/installer-amd64/current/images/SHA256SUMS', wantlist=True)
+          | select('search','netboot/mini.iso')
+          | first
+          | regex_replace(' +.*$') }}
