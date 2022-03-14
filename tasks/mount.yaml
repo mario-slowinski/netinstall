@@ -18,7 +18,7 @@
   ansible.posix.mount:
     src: "{{ item[0]['repo_dir'] +'/'+ item[1]['version'] }}"
     path: "{{ netinstall_tftpd['path'] +'/'+ item[0]['name'] + '/'+ item[1]['version'] }}"
-    fstype: "{{ netinstall_mount['fs'] }}"
+    fstype: "{{ netinstall_mount['lofs'] }}"
     opts: "{{ netinstall_mount['bind'] }}"
     state: mounted
   loop: "{{ (netinstall_distros | selectattr('name','eq',distro | default('')) | default(netinstall_distros, true)) \
