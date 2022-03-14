@@ -1,6 +1,7 @@
 ---
 Solaris_mount:
   fs: "hsfs"
+  lofs: "lofs"
   opts: "ro,nosuid,noglobal,maplcase,rr,traildot"
   bind: "ro"
 
@@ -21,3 +22,5 @@ Solaris_tftpd:
     file: 0o644
   setype: "tftpdir_t"
   path: "/etc/netboot/pxelinux"
+
+Solaris_password_hash: "sha512"
