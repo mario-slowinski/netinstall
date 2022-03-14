@@ -7,7 +7,6 @@ auth --enableshadow --passalgo=sha512
 
 cmdline
 eula --agreed
-install 
 url --url="{{ release['pkg_repo'] | default(release['pxe_repo']) }}"
 
 # Run the Setup Agent on first boot
