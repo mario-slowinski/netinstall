@@ -12,7 +12,7 @@ centos:
         url: "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso"
         sum: >-
           sha256:
-              {{- lookup('url', 'http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-20220310.0-x86_64-boot.iso.SHA256SUM', wantlist=True)
+              {{- lookup('url', 'http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso.SHA256SUM', wantlist=True)
               | select('search','SHA.*CentOS-Stream-9.*-x86_64-boot.iso')
               | first
               | regex_replace('^.* = ') }}
