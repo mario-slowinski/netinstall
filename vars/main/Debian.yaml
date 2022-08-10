@@ -1,0 +1,25 @@
+---
+Debian_mount:
+  fs: iso9660
+  opts: "ro,loop"
+  bind: "ro,bind"
+
+Debian_httpd:
+  owner: "apache"
+  group: "apache"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "httpd_sys_content_t"
+  port: 80
+
+Debian_tftpd:
+  owner: "root"
+  group: "root"
+  mode:
+    directory: 0o755
+    file: 0o644
+  setype: "tftpdir_t"
+  path: "/var/lib/tftpboot/pxelinux"
+
+Debian_password_hash: "sha512"
