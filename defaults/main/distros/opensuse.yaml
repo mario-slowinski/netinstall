@@ -2,8 +2,8 @@
 opensuse:
   name: opensuse
   description: openSUSE
-  img_dir: "/export/soft/opensuse"
-  repo_dir: "/export/repo/opensuse"
+  img_dir: "{{ netinstall_img }}/opensuse"
+  repo_dir: "{{ netinstall_repo }}/opensuse"
   releases:
     - version: "15.1"
       pxe_repo: "http://{{ inventory_hostname }}/opensuse/15.1"

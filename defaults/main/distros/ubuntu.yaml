@@ -2,8 +2,8 @@
 ubuntu:
   name: ubuntu
   description: "Ubuntu Server"
-  img_dir: "/export/soft/ubuntu"
-  repo_dir: "/export/repo/ubuntu"
+  img_dir: "{{ netinstall_img }}/ubuntu"
+  repo_dir: "{{ netinstall_repo }}/ubuntu"
   releases:
     - version: "focal"
       pxe_repo: "http://deb.debian.org"

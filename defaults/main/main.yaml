@@ -1,5 +1,6 @@
 ---
-netinstall_base: /export/repo
+netinstall_repo: /export/repo
+netinstall_img: /export/soft
 netinstall_password: "Welcome2!"
 netinstall_password_hash: "{{ lookup('vars', ansible_os_family+'_password_hash') }}"
 

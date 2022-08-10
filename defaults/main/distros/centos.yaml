@@ -2,8 +2,8 @@
 centos:
   name: centos
   description: "CentOS"
-  img_dir: "/export/soft/rhel"
-  repo_dir: "/export/repo/centos"
+  img_dir: "{{ netinstall_img }}/rhel"
+  repo_dir: "{{ netinstall_repo }}/centos"
   releases:
     - version: "9"
       pxe_repo: "http://mirror.stream.centos.org/centos/9-stream/BaseOS/x86_64/os"

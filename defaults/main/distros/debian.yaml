@@ -2,8 +2,8 @@
 debian:
   name: debian
   description: Debian
-  img_dir: "/export/soft/debian"
-  repo_dir: "/export/repo/debian"
+  img_dir: "{{ netinstall_img }}/debian"
+  repo_dir: "{{ netinstall_repo }}/debian"
   releases:
     - version: "stable"
       pxe_repo: "http://deb.debian.org"

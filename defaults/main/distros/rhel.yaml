@@ -2,8 +2,8 @@
 rhel:
   name: rhel
   description: "Red Hat Enterprise Linux Server"
-  img_dir: "/export/soft/rhel"
-  repo_dir: "/export/repo/rhel"
+  img_dir: "{{ netinstall_img }}/rhel"
+  repo_dir: "{{ netinstall_repo }}/rhel"
   releases:
     - version: "8.3"
       pxe_repo: "http://{{ inventory_hostname }}/rhel/8.3"

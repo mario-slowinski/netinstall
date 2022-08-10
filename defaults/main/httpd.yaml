@@ -2,8 +2,8 @@ netinstall_VirtualHosts:
   - ServerName: "{{ inventory_hostname }}"
     Listen: 80
     ServerAlias: "{{ inventory_hostname }}"
-    DocumentRoot: "{{ netinstall_base }}"
+    DocumentRoot: "{{ netinstall_repo }}"
     directives:
-      - Directory: "{{ netinstall_base }}"
+      - Directory: "{{ netinstall_repo }}"
         options:
           - Require: "all granted"

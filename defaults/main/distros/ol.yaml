@@ -2,8 +2,8 @@
 ol:
   name: ol
   description: "Oracle Linux"
-  img_dir: "/export/soft/oracle/linux"
-  repo_dir: "/export/repo/ol"
+  img_dir: "{{ netinstall_img }}/oracle/linux"
+  repo_dir: "{{ netinstall_repo }}/ol"
   releases:
     - version: "8.latest"
       pxe_repo: "http://{{ inventory_hostname }}/ol/8.latest"
